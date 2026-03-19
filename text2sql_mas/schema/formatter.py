@@ -1,45 +1,39 @@
-"""Schema serialization and pruned schema formatting for downstream agents."""
+"""Formats a pruned schema subset into a structured string for LLM prompts."""
 
 
-def serialize_table(table_name: str, columns: list[dict], include_types: bool = True) -> str:
+def format_pruned_schema(selected_tables: list, schema: dict) -> str:
     """
-    Serializes a table schema to a natural-language-friendly string for embedding.
+    Format a subset of the schema as a structured DDL-like string for
+    injection into planning and generation prompts.
 
     Example output:
-    "orders: order_id (INTEGER, PK), customer_id (INTEGER, FK→customers.customer_id),
-     order_date (TEXT), total_amount (REAL), status (TEXT)"
-    """
-    col_parts = []
-    for col in columns:
-        part = f"{col['name']} ({col['type']}"
-        if col.get('is_pk'):
-            part += ", PK"
-        if col.get('fk_ref'):
-            part += f", FK→{col['fk_ref']}"
-        part += ")"
-        col_parts.append(part)
+        TABLE: singer
+          - Singer_ID (INTEGER) [PK]
+          - Name (TEXT)
+          - Country (TEXT)
 
-    return f"{table_name}: {', '.join(col_parts)}"
+        TABLE: singer_in_concert
+          - concert_ID (INTEGER) [FK → concert.concert_ID]
+          - Singer_ID (INTEGER) [FK → singer.Singer_ID]
 
+    Args:
+        selected_tables : ordered list of table names to include
+        schema          : full or pruned schema dict
 
-def format_pruned_schema(
-    selected_tables: list[str],
-    full_schema: dict
-) -> str:
-    """
-    Formats the pruned schema subset as a structured DDL-like string.
-    Includes column names, types, primary keys, and foreign key references.
+    Returns:
+        Multi-line string ready for prompt injection
     """
     lines = []
     for tbl in selected_tables:
-        tbl_data = full_schema[tbl]
+        if tbl not in schema:
+            continue
         lines.append(f"TABLE: {tbl}")
-        for col in tbl_data['columns']:
-            col_str = f"  - {col['name']} ({col['type']})"
-            if col.get('is_pk'):
-                col_str += " [PK]"
-            if col.get('fk_ref'):
-                col_str += f" [FK → {col['fk_ref']}]"
-            lines.append(col_str)
-        lines.append("")
-    return "\n".join(lines)
+        for col in schema[tbl]["columns"]:
+            s = f"  - {col['name']} ({col['type']})"
+            if col.get("is_pk"):
+                s += " [PK]"
+            if col.get("fk_ref"):
+                s += f" [FK → {col['fk_ref']}]"
+            lines.append(s)
+        lines.append("")          # blank line between tables
+    return "\n".join(lines).strip()

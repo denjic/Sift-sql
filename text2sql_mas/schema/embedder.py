@@ -1,39 +1,50 @@
-"""MiniLM embedding and cosine similarity retrieval for semantic schema linking."""
+"""Schema embedding and cosine-similarity retrieval using all-MiniLM-L6-v2."""
 
-from sentence_transformers import SentenceTransformer
 import numpy as np
+from sentence_transformers import SentenceTransformer
+from text2sql_mas.schema.serializer import serialize_table
 
-from text2sql_mas.schema.formatter import serialize_table
-
-# Model is loaded once at import time and reused
-model = SentenceTransformer('all-MiniLM-L6-v2')
+_MODEL = None
 
 
-def embed_schema(full_schema: dict) -> dict[str, np.ndarray]:
+def get_model() -> SentenceTransformer:
+    """Singleton loader — model is loaded once and reused."""
+    global _MODEL
+    if _MODEL is None:
+        _MODEL = SentenceTransformer("all-MiniLM-L6-v2")
+    return _MODEL
+
+
+def embed_schema(full_schema: dict) -> dict:
     """
-    Returns a mapping from table_name → embedding vector.
-    Embeddings are computed once and cached.
+    Encode every table in full_schema into a 384-dim embedding vector.
+
+    Returns:
+        {table_name: np.ndarray of shape (384,)}
     """
-    serialized = {
-        tbl_name: serialize_table(tbl_name, tbl_data['columns'])
-        for tbl_name, tbl_data in full_schema.items()
-    }
-    embeddings = model.encode(list(serialized.values()), normalize_embeddings=True)
-    return {name: emb for name, emb in zip(serialized.keys(), embeddings)}
+    model = get_model()
+    names = list(full_schema.keys())
+    texts = [serialize_table(t, full_schema[t]["columns"]) for t in names]
+    vecs  = model.encode(texts, normalize_embeddings=True)
+    return {name: vecs[i] for i, name in enumerate(names)}
 
 
-def retrieve_top_k_tables(
+def retrieve_top_k(
     nl_query: str,
-    schema_embeddings: dict[str, np.ndarray],
-    k: int = 5
-) -> list[str]:
+    schema_embeddings: dict,
+    k: int = 5,
+) -> list:
     """
-    Returns names of the top-k most semantically relevant tables for the query.
+    Return the names of the top-k most semantically similar tables
+    to the natural language query, ranked by cosine similarity.
     """
-    query_embedding = model.encode([nl_query], normalize_embeddings=True)[0]
+    model  = get_model()
+    q_vec  = model.encode([nl_query], normalize_embeddings=True)[0]
     scores = {
-        tbl: float(np.dot(query_embedding, emb))
+        tbl: float(np.dot(q_vec, emb))
         for tbl, emb in schema_embeddings.items()
     }
     ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     return [tbl for tbl, _ in ranked[:k]]
+# Alias for backwards compatibility with generated agent code
+retrieve_top_k_tables = retrieve_top_k
