@@ -43,7 +43,7 @@ except ImportError:
     GROQ_AVAILABLE = False
 
 # ── Constants ──────────────────────────────────────────────────────────────────
-GROQ_MODEL       = "llama-3.1-8b-instant"
+GROQ_MODEL       = "qwen3-32b"
 TOP_K_DEFAULT    = 5
 MAX_RETRIES      = 3
 SPIDER_DB_PATH   = "./spider/database"
@@ -390,7 +390,7 @@ with st.sidebar:
     spider_dev  = st.text_input("Spider dev.json path",   SPIDER_DEV_JSON)
 
     st.divider()
-    st.caption("📄 Paper: Multi-Agent Text-to-SQL\nBackbone: llama-3.1-8b-instant\nOrchestration: LangGraph")
+    st.caption("📄 Paper: Multi-Agent Text-to-SQL\nBackbone: qwen3-32b\nOrchestration: LangGraph")
 
     # Dependency checks
     st.divider()
@@ -769,7 +769,7 @@ with tab3:
     st.markdown(f"""
 The four-phase LangGraph multi-agent architecture achieves **{model_c_ex}% Execution Accuracy** on the
 Spider 1.0 development set, compared to **{baseline_ex}%** for the monolithic zero-shot baseline using
-the same `llama-3.1-8b-instant` backbone — a **+{gain} percentage-point improvement**.
+the same `qwen3-32b` backbone — a **+{gain} percentage-point improvement**.
 
 Key findings:
 - The **Schema Linking Agent** (MiniLM cosine retrieval) reduces input token count by 75% on databases

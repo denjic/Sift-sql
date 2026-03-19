@@ -120,7 +120,7 @@ Text-to-SQL, Multi-Agent Systems, Large Language Models, Schema Linking, Chain-o
 - Effect: largest single-component accuracy driver (+5.6 pp in ablation)
 
 ### D. Phase 3: Constrained SQL Generation Agent
-- Model: llama-3.1-8b-instant via Groq; temperature = 0.0
+- Model: qwen3-32b via Groq; temperature = 0.0
 - Schema-aware prompting: instructs model to use only pruned_schema entities
 - Blueprint-constrained generation: generation agent receives and follows Phase 2 output
 - Rationale for open-weight deterministic model vs. stochastic GPT-4

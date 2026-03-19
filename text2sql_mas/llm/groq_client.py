@@ -22,6 +22,7 @@ class GroqClient:
             "model": self.config.groq_model,
             "temperature": self.config.groq_temperature,
             "max_tokens": self.config.groq_max_tokens,
+            "extra_body": {"thinking": {"type": "disabled"}},
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_message}

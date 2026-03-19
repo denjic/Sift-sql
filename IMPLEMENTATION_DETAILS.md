@@ -11,7 +11,7 @@
 | Language | Python | ≥3.11 | Type hint support; async compatibility; rich ML ecosystem |
 | Schema Embeddings | sentence-transformers | ≥2.7.0 | `all-MiniLM-L6-v2` for fast, high-quality semantic similarity |
 | SQL Parsing & Validation | sqlglot | ≥23.0 | Cross-dialect AST parsing; zero DB dependency for validation |
-| LLM Inference | Groq API | latest | Sub-200ms inference latency; `llama-3.1-8b-instant` hosted endpoint |
+| LLM Inference | Groq API | latest | Sub-200ms inference latency; `qwen3-32b` hosted endpoint |
 | Database (dev/test) | SQLite | 3.x | Spider/BIRD databases ship as SQLite; zero-config testing |
 | Database (production) | PostgreSQL | ≥14 | Enterprise-grade; extended `INFORMATION_SCHEMA` support |
 | HTTP Client | httpx / requests | ≥0.27.0 | Groq API calls |
@@ -122,7 +122,7 @@ from pydantic_settings import BaseSettings
 
 class PipelineConfig(BaseSettings):
     groq_api_key: str                          # Set via GROQ_API_KEY env var
-    groq_model: str = "llama-3.1-8b-instant"
+    groq_model: str = "qwen3-32b"
     groq_temperature: float = 0.0              # Zero-temperature: deterministic
     groq_max_tokens: int = 1024
     groq_timeout_seconds: int = 30

@@ -11,7 +11,7 @@ The evaluation plan is structured around three layers of assessment:
 2. **Component-level ablation** — Isolating the contribution of each agent phase through controlled addition/removal experiments.
 3. **Qualitative error analysis** — Categorizing failure modes by type and complexity to identify the most impactful directions for future improvement.
 
-A key evaluative commitment is that **all experiments use the same LLM backbone** (`llama-3.1-8b-instant`, T=0.0) across all configurations. This ensures that measured accuracy differences reflect architectural contributions rather than model capability differences, controlling for the confound that plagues cross-system comparisons between GPT-4 and smaller models.
+A key evaluative commitment is that **all experiments use the same LLM backbone** (`qwen3-32b`, T=0.0) across all configurations. This ensures that measured accuracy differences reflect architectural contributions rather than model capability differences, controlling for the confound that plagues cross-system comparisons between GPT-4 and smaller models.
 
 ---
 

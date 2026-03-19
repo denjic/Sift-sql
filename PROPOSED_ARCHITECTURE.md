@@ -113,7 +113,7 @@ This phase is absent from all reviewed open-source LangGraph implementations. DI
 **Input state keys:** `nl_query`, `pruned_schema`, `logical_blueprint`
 **Output state keys:** `generated_sql`
 
-**Model:** `llama-3.1-8b-instant` via Groq inference API
+**Model:** `qwen3-32b` via Groq inference API
 
 **Critical parameterization:**
 - **Temperature = 0.0** (zero-temperature policy): Ensures deterministic, reproducible output. Any given input state produces exactly the same SQL across runs, enabling reproducible experimental evaluation.
@@ -142,7 +142,7 @@ Question:
 SQL:
 ```
 
-**Why an open-weight 8B model?** The use of `llama-3.1-8b-instant` is a deliberate design decision grounded in three considerations: (1) **reproducibility** — the model weights are publicly available; (2) **accessibility** — inference is available at negligible cost via Groq; (3) **the blueprint reduces generation complexity** — because the Planning Agent has already resolved which tables and joins are needed, the generation task for the 8B model is substantially simpler than full zero-shot Text-to-SQL, making the smaller model adequate.
+**Why an open-weight 8B model?** The use of `qwen3-32b` is a deliberate design decision grounded in three considerations: (1) **reproducibility** — the model weights are publicly available; (2) **accessibility** — inference is available at negligible cost via Groq; (3) **the blueprint reduces generation complexity** — because the Planning Agent has already resolved which tables and joins are needed, the generation task for the 8B model is substantially simpler than full zero-shot Text-to-SQL, making the smaller model adequate.
 
 ---
 
@@ -239,7 +239,7 @@ flowchart TD
     START([Natural Language Query])
     A[Phase 1: Schema Linking Agent\nMiniLM cosine top-k pruning]
     B[Phase 2: CoT Planning Agent\nLogical blueprint emission]
-    C[Phase 3: SQL Generation Agent\nllama-3.1-8b-instant, T=0]
+    C[Phase 3: SQL Generation Agent\nqwen3-32b, T=0]
     D{Phase 4A: AST Schema Guard\nEntity validation}
     E[Phase 4B: Self-Correction Agent\nN-retry iterative repair]
     F([Validated SQL Output])

@@ -15,7 +15,7 @@ from pydantic_settings import BaseSettings
 class PipelineConfig(BaseSettings):
     # Groq LLM
     groq_api_key:        str   = ""
-    groq_model:          str   = "llama-3.1-8b-instant"
+    groq_model:          str   = "qwen3-32b"
     groq_temperature:    float = 0.0
     groq_max_tokens:     int   = 1024
     groq_timeout_seconds: int  = 30

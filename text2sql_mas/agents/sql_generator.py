@@ -10,6 +10,17 @@ from text2sql_mas.schema.formatter import format_pruned_schema
 from text2sql_mas.config import config
 
 
+import re
+
+def clean_sql_output(raw: str) -> str:
+    """Strip Qwen3 thinking blocks and markdown fences."""
+    # Strip Qwen3 thinking blocks
+    raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL)
+    # Strip markdown fences
+    raw = re.sub(r"```sql|```", "", raw, flags=re.IGNORECASE)
+    return raw.strip()
+
+
 def sql_generation_node(state: dict) -> dict:
     """
     LangGraph node: Phase 3 — Constrained SQL Generation.
@@ -35,21 +46,13 @@ def sql_generation_node(state: dict) -> dict:
 
     # Call Groq LLM for SQL generation
     client = GroqClient(config)
-    generated_sql = client.complete(
+    raw_output = client.complete(
         system_prompt=system_prompt,
         user_message=nl_query,
     )
 
-    # Clean potential markdown formatting from LLM output
-    generated_sql = generated_sql.strip()
-    if generated_sql.startswith("```"):
-        lines = generated_sql.split("\n")
-        # Remove first and last lines if they are code fences
-        if lines[0].startswith("```"):
-            lines = lines[1:]
-        if lines and lines[-1].strip() == "```":
-            lines = lines[:-1]
-        generated_sql = "\n".join(lines).strip()
+    # Clean potential thinking blocks and markdown formatting
+    generated_sql = clean_sql_output(raw_output)
 
     return {
         "generated_sql": generated_sql,

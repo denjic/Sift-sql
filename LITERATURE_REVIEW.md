@@ -30,7 +30,7 @@ We organize the review along five analytical dimensions:
 | 8 | **AmbiSQL** | arXiv 2025 | Standard schema injection | Clarification Agent (multi-choice Q) | GPT-4 | Ambiguity-resolved generation | — | ~58.0 | — | No |
 | 9 | **EvoSchema** | VLDB 2025 | Dynamic schema discovery queries | Schema-evolution-aware prompting | GPT-4 | None | — | ~55.0 | — | No |
 | 10 | **Arctic-Text2SQL-R1** | arXiv 2025 | Standard injection | RL-based chain-of-thought | Arctic-7B (RL-trained) | Reward-grounded self-correction | — | ~72.0 | — | Partial |
-| **Ours** | **Proposed** | — | MiniLM cosine top-$k$ pruning | Dedicated CoT Planning Agent (blueprint) | `llama-3.1-8b-instant`, T=0 | Pre-execution AST Schema Guard + N-retry Self-Correction | **82.1** | — | — | Yes (planned) |
+| **Ours** | **Proposed** | — | MiniLM cosine top-$k$ pruning | Dedicated CoT Planning Agent (blueprint) | `qwen3-32b`, T=0 | Pre-execution AST Schema Guard + N-retry Self-Correction | **82.1** | — | — | Yes (planned) |
 
 > **Note:** Spider 1.0 and BIRD are distinct benchmarks with different difficulty profiles. Spider 1.0 EX > 85% does not imply competitive BIRD performance; DIN-SQL's 82.8% Spider / 54.89% BIRD illustrates the gap. The proposed system's 82.1% on Spider 1.0 is evaluated in a zero-shot, open-weight, inference-only regime, representing a different operating point than GPT-4-based systems.
 
@@ -76,7 +76,7 @@ MAC-SQL achieved 59.59% EX on the BIRD holdout test set and 86.2% on Spider 1.0.
 - The Selector performs keyword matching, not dense embedding retrieval. It cannot handle idiosyncratic column naming (e.g., `cust_lname` ↔ "customer last name").
 - The Decomposer combines planning and generation within a single agent; there is no explicit blueprint state artifact.
 - The Refiner fires post-execution only; there is no pre-execution AST validation.
-- MAC-SQL uses GPT-4 (closed-source); the proposed system uses `llama-3.1-8b-instant` (open-weight).
+- MAC-SQL uses GPT-4 (closed-source); the proposed system uses `qwen3-32b` (open-weight).
 
 ### 5.2 CHESS (Talaei et al., VLDB 2024)
 

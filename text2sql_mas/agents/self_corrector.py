@@ -7,7 +7,7 @@ FIX LOG (v2):
   original broken SQL back unchanged instead of correcting it.
 - BUG 2 FIXED: CORRECTION_PROMPT_V1 is now used as the USER message, not as the
   system prompt. The system prompt is now a short, stable role description. This
-  matches how Groq's llama-3.1-8b-instant processes instruction-following tasks.
+  matches how Groq's qwen3-32b processes instruction-following tasks.
 - BUG 3 FIXED: Added SQL fence stripping as a dedicated helper — was previously
   unreliable with triple-backtick variants like ```sql\n and ```\n.
 """
@@ -28,7 +28,9 @@ CORRECTOR_SYSTEM = (
 
 
 def _strip_sql_fences(text: str) -> str:
-    """Remove markdown code fences from LLM output."""
+    """Remove Qwen3 thinking blocks and markdown code fences from LLM output."""
+    # Strip Qwen3 thinking blocks
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
     text = text.strip()
     # Remove ```sql ... ``` or ``` ... ```
     text = re.sub(r"^```(?:sql)?\s*\n?", "", text, flags=re.IGNORECASE)

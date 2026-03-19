@@ -188,6 +188,6 @@ This enables fine-grained attribution of accuracy gains and losses across system
 - All random seeds fixed: `numpy.random.seed(42)`, `torch.manual_seed(42)`
 - Temperature = 0.0 for all LLM calls (deterministic generation)
 - All experiments run on the same hardware (8-core CPU, 16GB RAM)
-- Groq API model version pinned to `llama-3.1-8b-instant` (fixed model version)
+- Groq API model version pinned to `qwen3-32b` (fixed model version)
 - Evaluation scripts, prompts, and configuration files released in the repository
 - MLflow experiment logs (run IDs, parameters, metrics) archived alongside the paper
