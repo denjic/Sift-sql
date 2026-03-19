@@ -43,7 +43,7 @@ except ImportError:
     GROQ_AVAILABLE = False
 
 # ── Constants ──────────────────────────────────────────────────────────────────
-GROQ_MODEL       = "qwen3-32b"
+GROQ_MODEL = "qwen/qwen3-32b"
 TOP_K_DEFAULT    = 5
 MAX_RETRIES      = 3
 SPIDER_DB_PATH   = "./spider/database"
@@ -100,12 +100,15 @@ def format_pruned_schema(selected_tables: list, schema: dict) -> str:
 
 
 # ── Phase 1: Semantic Schema Linking ──────────────────────────────────────────
-@st.cache_resource(show_spinner=False)
+_EMBEDDING_MODEL = None
+
 def load_embedding_model():
-    return SentenceTransformer("all-MiniLM-L6-v2")
+    global _EMBEDDING_MODEL
+    if _EMBEDDING_MODEL is None:
+        _EMBEDDING_MODEL = SentenceTransformer("all-MiniLM-L6-v2")
+    return _EMBEDDING_MODEL
 
 
-@st.cache_data(show_spinner=False)
 def embed_schema(_model, db_path: str) -> dict:
     """Cache embeddings per database path."""
     schema = load_schema_from_sqlite(db_path)
@@ -151,7 +154,15 @@ def call_groq(system_prompt: str, user_msg: str, api_key: str) -> str:
             {"role": "user",    "content": user_msg}
         ]
     )
-    return resp.choices[0].message.content.strip()
+    raw = resp.choices[0].message.content.strip()
+    
+    # ADD THESE 3 LINES:
+    import re
+    raw = re.sub(r"<think>.*?</think>", "", raw, flags=re.DOTALL).strip()
+    raw = re.sub(r"^```(?:sql)?\s*\n?", "", raw, flags=re.IGNORECASE)
+    raw = re.sub(r"\n?```\s*$", "", raw)
+    
+    return raw.strip()
 
 
 # ── Phase 2: CoT Query Planning ────────────────────────────────────────────────
