@@ -29,3 +29,31 @@ Thumbs.db
 
 # MLflow
 mlruns/
+
+# Research and Planning Documentation
+EVALUATION_PLAN.md
+EXPERIMENT_DESIGN.md
+IMPLEMENTATION_DETAILS.md
+LITERATURE_REVIEW.md
+PAPER_OUTLINE.md
+PROPOSED_ARCHITECTURE.md
+RESEARCH_PROPOSAL.md
+SCHEMA_AWARE_MODULE.md
+SELF_CORRECTION_LOOP.md
+SYSTEM_ARCHITECTURE_DOC.md
+
+# Backups and Logs
+*.bak
+checkpoints/
+logs/
+
+# Local Analysis and Testing Scripts
+analyze_ast.py
+analyze_eval.py
+compare_errors.py
+compare_traces.py
+diagnostic.py
+test_changes.py
+test_fixes.py
+verify_agents.py
+

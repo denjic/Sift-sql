@@ -1,24 +1,14 @@
-"""Pipeline configuration — pydantic-settings based.
- 
-FIX LOG (v2):
-- fk_closure_hops reduced from 2 → 1.
-  2-hop closure on databases like car_1 drags in the entire FK graph
-  (cars_data → car_names → model_list → car_makers → all tables), causing
-  Phase 3 to generate unnecessary multi-table JOINs for simple single-table
-  queries. 1 hop only adds directly adjacent tables, which is sufficient
-  for 95% of Spider queries while avoiding over-retrieval.
-"""
- 
+
 from pydantic_settings import BaseSettings
  
  
 class PipelineConfig(BaseSettings):
     # Groq LLM
     groq_api_key:        str   = ""
-    groq_model:          str   = "llama-3.1-8b-instant"
+    groq_model:           str = "llama-3.3-70b-versatile"
     groq_temperature:    float = 0.0
     groq_max_tokens:     int   = 1024
-    groq_timeout_seconds: int  = 30
+    groq_timeout_seconds: int  = 45
  
     # Schema linking
     embedding_model:     str = "all-MiniLM-L6-v2"
