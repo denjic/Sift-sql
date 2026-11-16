@@ -1,6 +1,8 @@
-# Multi-Agent Text-to-SQL System
+# Sift
 
-> A stateful, multi-agent pipeline that converts natural language questions into accurate SQLite queries — powered by **LangGraph**, **Groq (LLaMA 3.3 70B)**, and **sentence-transformers**.
+> Ask in plain English. Sift finds the rows.
+
+Sift is a multi-agent text-to-SQL system. It turns a plain-English question into a correct SQLite query. It uses **LangGraph**, **Groq (LLaMA 3.3 70B)**, and **sentence-transformers**.
 
 ---
 
@@ -140,7 +142,7 @@ Results are scored with **Execution Accuracy (EX)**: the generated SQL and the g
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/Multi_Agent-TexttoSql.git
+git clone https://github.com/your-username/Sift-sql.git
 cd Multi_Agent-TexttoSql
 pip install -r requirements.txt
 ```
